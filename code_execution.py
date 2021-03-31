@@ -1,13 +1,13 @@
 import inspect
-from abc import ABC, abstractclassmethod
-from typing import Callable, Set, Type, Dict
-from collections import defaultdict
-
 import logging
+from abc import ABC, abstractclassmethod
+from collections import defaultdict
+from typing import Callable, Set, Type, Dict, List
+
 
 class Exploit(ABC):
     @abstractclassmethod
-    def generate_payload(command: str) -> str:
+    def generate_payload(command: str) -> List[str]:
         pass
 
     @abstractclassmethod
@@ -17,10 +17,15 @@ class Exploit(ABC):
     vulnerable_function: Callable
     source: str = ""
     category_name: str = ""
+    notes: str = ""
 
     @classmethod
     def get_vulnerable_function_fqn(cls):
-        return cls.vulnerable_function.__module__ + '.' + cls.vulnerable_function.__qualname__
+        return (
+            cls.vulnerable_function.__module__
+            + "."
+            + cls.vulnerable_function.__qualname__
+        )
 
 
 def get_exploits_by_category() -> Dict[str, Type[Exploit]]:

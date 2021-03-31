@@ -10,10 +10,12 @@
 <h2>Test Exploit</h2>
 <form method="post">
     <div class="form-group">
-        <label for="title">payload</label>
-        <input type="text" name="payload"
-               placeholder="rce payload? 🐵" class="form-control"
-               value="{{ request.form['payload'] }}"></input>
+        {% for param in exploit_params %}
+        <label for="title">{{param}}</label>
+        <input type="text" name="{{param}}" class="form-control"
+            value="{{ request.form[param] }}"></input>
+        </a>
+        {% endfor %}
     </div>
     <div class="form-group">
         <button type="submit" class="btn btn-primary">Submit</button>
@@ -22,20 +24,21 @@
 <h2>Exploit Help</h2>
 <div class="accordion" id="accordionExample">
     <div class="card">
-      <div class="card-header" id="headingOne">
-        <h2 class="mb-0">
-          <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-            Payload Generation Example
-          </button>
-        </h2>
-      </div>
-      <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
-        <div class="card-body">
-            <pre><code>
+        <div class="card-header" id="headingOne">
+            <h2 class="mb-0">
+                <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne"
+                    aria-expanded="true" aria-controls="collapseOne">
+                    Payload Generation Example
+                </button>
+            </h2>
+        </div>
+        <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+            <div class="card-body">
+                <pre><code>
 {{generation_code}}
             </code></pre>
+            </div>
         </div>
-      </div>
     </div>
 </div>
 

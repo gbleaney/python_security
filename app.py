@@ -19,17 +19,20 @@ def homepage():
 @app.route("/demo/<class_name>", methods=["POST", "GET"])
 def demo(class_name):
     exploit = get_exploit(class_name)
+    exploit_params = inspect.signature(exploit.run_payload).parameters
     if request.method == "GET":
         return render_template(
             "demo.html",
             demo_title=exploit.get_vulnerable_function_fqn(),
+            exploit_params=exploit_params,
             vulnerable_code=inspect.getsource(exploit.run_payload),
-            generation_code=inspect.getsource(exploit.generate_payload), exploits_by_category=get_exploits_by_category()
+            generation_code=inspect.getsource(exploit.generate_payload),
+            exploits_by_category=get_exploits_by_category()
         )
         # (TODO) print page to take input
     elif request.method == "POST":
-        payload = request.form.get("payload", None)
-        if not payload:
+        arguments = [request.form.get(param, None) for param in exploit_params]
+        if not arguments:
             return "Error!"
-        exploit.run_payload(payload)
+        exploit.run_payload(*arguments)
         return "It didn't crash..."
