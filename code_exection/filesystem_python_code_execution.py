@@ -1,10 +1,11 @@
 import builtins
+import importlib
 import sys
 import tempfile
 from pathlib import Path
 from typing import List
 from zipfile import ZipFile
-
+import shutil
 from .execution_base import Exploit
 
 
@@ -12,7 +13,7 @@ class FilesystemPythonExploit(Exploit):
     category_name = "Filesystem Python Code Execution"
 
 
-class ImportExploit(FilesystemPythonExploit):
+class UserControlledFileNameImportExploit(FilesystemPythonExploit):
     vulnerable_function = builtins.__import__  # Used by the 'import' keyword
 
     def generate_payload(source_code: str) -> List[str]:
@@ -42,6 +43,34 @@ class ImportExploit(FilesystemPythonExploit):
             file_path.unlink()
 
 
+class UserControlledImportNameImportExploit(FilesystemPythonExploit):
+    vulnerable_function = builtins.__import__  # Used by the 'import' keyword
+
+    def generate_payload(source_code: str) -> List[str]:
+        return [source_code, "__init__.py", "tmp"]
+
+    def run_payload(file_contents: str, file_name: str, import_name: str) -> None:
+        # Prevent path traversal
+        if ".." in file_name or "/" in file_name:
+            raise Exception(
+                "Path traversal attempt. '..' and '/' not allowed in file name"
+            )
+
+        # Simulate a user uploaded temp file
+        temp_folder = Path(__file__).parent.parent / "tmp"
+        temp_folder.mkdir()
+        temp_file = temp_folder / file_name
+        temp_file.write_text(file_contents)
+
+        try:
+            importlib.import_module(import_name)
+
+            # Do stuff
+        finally:
+            # Clean up temp files
+            shutil.rmtree(str(temp_folder))
+
+
 class EnvironmentVariableExploit(FilesystemPythonExploit):
     vulnerable_function = "sys.path.insert"
 
@@ -49,15 +78,16 @@ class EnvironmentVariableExploit(FilesystemPythonExploit):
         return [
             source_code,
             "requests.py",
-            str(Path(__file__).parent / "tmp/user_upload.zip"),
+            str(Path(__file__).parent.parent / "tmp/user_upload.zip"),
         ]
 
     def run_payload(
         zip_file_contents: str, zip_file_name: str, path_value: str
     ) -> None:
         # Simulate a user uploaded zip file
-        temp_upload_zip = Path(__file__).parent / "tmp/user_upload.zip"
-        temp_upload_zip.parent.mkdir()
+        temp_folder = Path(__file__).parent.parent / "tmp"
+        temp_folder.mkdir()
+        temp_upload_zip = temp_folder / "user_upload.zip"
         with ZipFile(str(temp_upload_zip), "w") as zip:
             zip.writestr(zip_file_name, zip_file_contents)
 
@@ -68,6 +98,5 @@ class EnvironmentVariableExploit(FilesystemPythonExploit):
 
             # Do stuff
         finally:
-            # Clean up temp file
-            temp_upload_zip.unlink()
-            temp_upload_zip.parent.rmdir()
+            # Clean up temp files
+            shutil.rmtree(str(temp_folder))
