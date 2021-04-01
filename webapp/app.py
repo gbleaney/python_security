@@ -1,19 +1,24 @@
+# To start this server, run this from the root of the repo:
+# FLASK_APP=webapp.app.py FLASK_ENV=development flask run -h localhost -p 2121
+
 import inspect
 
+from code_execution.execution_base import (
+    Exploit,
+    get_exploit,
+    get_exploits,
+    get_exploits_by_category,
+)
 from flask import Flask, request, render_template
-
-from .code_execution import Exploit, get_exploit, get_exploits, get_exploits_by_category
 
 app = Flask(__name__)
 
 
-# run with
-# env FLAS_APP=app.py FLASK_ENV=development flask run -h localhost -p 2121
-
-
 @app.route("/")
 def homepage():
-    return render_template("index.html", exploits_by_category=get_exploits_by_category())
+    return render_template(
+        "index.html", exploits_by_category=get_exploits_by_category()
+    )
 
 
 @app.route("/demo/<class_name>", methods=["POST", "GET"])
@@ -27,7 +32,7 @@ def demo(class_name):
             exploit_params=exploit_params,
             vulnerable_code=inspect.getsource(exploit.run_payload),
             generation_code=inspect.getsource(exploit.generate_payload),
-            exploits_by_category=get_exploits_by_category()
+            exploits_by_category=get_exploits_by_category(),
         )
         # (TODO) print page to take input
     elif request.method == "POST":
