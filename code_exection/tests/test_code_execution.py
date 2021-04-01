@@ -4,18 +4,22 @@ import logging
 import pathlib
 import tempfile
 import unittest
-from typing import Type
+from typing import Type, List
 
 from ..execution_base import get_exploits, Exploit
 from ..filesystem_python_code_execution import FilesystemPythonExploit
-from ..python_code_execution import SimplePythonExploit
+from ..python_code_execution import SimplePythonExploit, StringFormatExploit
 from ..shell_command_execution import ShellExploit
 
 logging.basicConfig(level=logging.DEBUG)
 
 
 class CodeExecutionMethods(unittest.TestCase):
-    def run_exploits(self, exploit_type: Type[Exploit], command: str):
+    def run_exploits(
+        self,
+        exploit_type: Type[Exploit],
+        command: str,
+    ):
         exploits = get_exploits(exploit_type)
         for exploit in exploits:
             logging.debug(

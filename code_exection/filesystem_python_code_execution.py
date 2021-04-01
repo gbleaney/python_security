@@ -44,7 +44,7 @@ class UserControlledFileNameImportExploit(FilesystemPythonExploit):
 
 
 class UserControlledImportNameImportExploit(FilesystemPythonExploit):
-    vulnerable_function = builtins.__import__  # Used by the 'import' keyword
+    vulnerable_function = importlib.import_module
 
     def generate_payload(source_code: str) -> List[str]:
         return [source_code, "__init__.py", "tmp"]
