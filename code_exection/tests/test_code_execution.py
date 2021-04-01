@@ -7,8 +7,7 @@ import unittest
 from typing import Type, List
 
 from ..execution_base import get_exploits, Exploit
-from ..filesystem_python_code_execution import FilesystemPythonExploit
-from ..python_code_execution import SimplePythonExploit, StringFormatExploit
+from ..python_code_execution import PythonExploit
 from ..shell_command_execution import ShellExploit
 
 logging.basicConfig(level=logging.DEBUG)
@@ -53,15 +52,9 @@ class CodeExecutionMethods(unittest.TestCase):
     def test_shell_command_execution(self):
         self.run_exploits(ShellExploit, "touch {file}")
 
-    def test_simple_python_code_execution(self):
+    def test_python_code_execution(self):
         self.run_exploits(
-            SimplePythonExploit,
-            """exec("import subprocess; subprocess.run(['touch', '{file}'])")""",
-        )
-
-    def test_filesystem_python_code_execution(self):
-        self.run_exploits(
-            FilesystemPythonExploit,
+            PythonExploit,
             """exec("import subprocess; subprocess.run(['touch', '{file}'])")""",
         )
 

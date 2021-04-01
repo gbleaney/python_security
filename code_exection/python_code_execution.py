@@ -9,7 +9,10 @@ import yaml
 from .execution_base import Exploit
 
 
-class SimplePythonExploit(Exploit):
+class PythonExploit(Exploit):
+    pass
+
+class SimplePythonExploit(PythonExploit):
     category_name = "Simple Python Code Execution"
 
     def generate_payload(source_code: str) -> str:

@@ -7,9 +7,9 @@ from typing import List
 from zipfile import ZipFile
 import shutil
 from .execution_base import Exploit
+from .python_code_execution import PythonExploit
 
-
-class FilesystemPythonExploit(Exploit):
+class FilesystemPythonExploit(PythonExploit):
     category_name = "Filesystem Python Code Execution"
 
 
