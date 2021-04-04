@@ -2,9 +2,11 @@ import builtins
 import pickle
 import subprocess
 from pathlib import Path
-from typing import Callable
-
+from typing import Callable, List
+import importlib
+import tempfile
 import yaml
+import textwrap
 
 from .execution_base import Exploit
 
@@ -31,6 +33,42 @@ class ExecExploit(SimplePythonExploit):
 
     def run_payload(payload: str) -> None:
         exec(payload)
+
+
+class InputExploit(SimplePythonExploit):
+    vulnerable_function = builtins.input
+
+    notes = "'input' is only vulnerable in Python 2"
+
+
+    def generate_payload(source_code: str) -> str:
+        source_code = source_code.replace("'", "\\'")
+        return f"__import__('code').InteractiveInterpreter().runsource('{source_code}')"
+
+
+    def run_payload(payload: str) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            python_file = Path(directory) / "hello_world.py"
+            python_file.write_text(textwrap.dedent("""
+                print("What is your name?")
+                name = input()
+                print("Hello " + name)
+            """))
+            program = subprocess.Popen(['python2', str(python_file)], stdin=subprocess.PIPE, text=True)
+            program.communicate(input=payload, timeout=1)
+
+
+class SimpleVMExploit(SimplePythonExploit):
+    vulnerable_function = "object.__call__"
+
+    def generate_payload(source_code: str) -> List[str]:
+        return ["builtins.eval", source_code]
+
+    def run_payload(fully_qualified_function: str, argument: str) -> None:
+        module_name, _, function_name = fully_qualified_function.rpartition(".")
+        module = importlib.import_module(module_name)
+        function = getattr(module, function_name)
+        function(argument)
 
 
 class PickleLoadsExploit(SimplePythonExploit):

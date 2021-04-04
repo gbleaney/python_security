@@ -55,7 +55,7 @@ class CodeExecutionMethods(unittest.TestCase):
     def test_python_code_execution(self):
         self.run_exploits(
             PythonExploit,
-            """exec("import subprocess; subprocess.run(['touch', '{file}'])")""",
+            """exec("import subprocess; subprocess.call(['touch', '{file}'])")""",
         )
 
 
