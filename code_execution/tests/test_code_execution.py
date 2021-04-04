@@ -5,6 +5,7 @@ import pathlib
 import tempfile
 import unittest
 from typing import Type, List
+from werkzeug.datastructures import FileStorage
 
 from ..execution_base import get_exploits, Exploit
 from ..python_code_execution import PythonExploit
@@ -30,9 +31,9 @@ class CodeExecutionMethods(unittest.TestCase):
                     command.format(file=file_to_touch.absolute())
                 )
                 logging.debug(payload)
-                if isinstance(payload, (str, bytes)):
+                if isinstance(payload, (str, bytes, FileStorage)):
                     exploit.run_payload(payload)
-                elif isinstance(payload, list):
+                elif isinstance(payload, (list, tuple)):
                     exploit.run_payload(*payload)
                 else:
                     raise Exception("Unexpected payload")

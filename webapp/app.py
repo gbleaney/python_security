@@ -2,6 +2,9 @@
 # FLASK_APP=webapp.app.py FLASK_ENV=development flask run -h localhost -p 2121
 
 import inspect
+from dataclasses import dataclass
+from werkzeug.datastructures import FileStorage
+
 
 from code_execution.execution_base import (
     Exploit,
@@ -14,6 +17,12 @@ from flask import Flask, request, render_template
 app = Flask(__name__)
 
 
+@dataclass
+class FormEntry:
+    name: str
+    input_type: str
+
+
 @app.route("/")
 def homepage():
     return render_template(
@@ -24,7 +33,17 @@ def homepage():
 @app.route("/demo/<class_name>", methods=["POST", "GET"])
 def demo(class_name):
     exploit = get_exploit(class_name)
-    exploit_params = inspect.signature(exploit.run_payload).parameters
+    exploit_params = []
+    for param_name, param in inspect.signature(exploit.run_payload).parameters.items():
+        if param.annotation == str:
+            input_type = "text"
+        elif param.annotation == FileStorage:
+            input_type = "file"
+        else:
+            raise Exception("Unexpected parameter annotation")
+        exploit_params.append(FormEntry(param_name, input_type))
+
+    print(exploit_params)
     if request.method == "GET":
         return render_template(
             "demo.html",
@@ -36,7 +55,14 @@ def demo(class_name):
         )
         # (TODO) print page to take input
     elif request.method == "POST":
-        arguments = [request.form.get(param, None) for param in exploit_params]
+        arguments = []
+        for param in exploit_params:
+            if param.input_type == "text":
+                arguments.append(request.form[param.name])
+            elif param.input_type == "file":
+                arguments.append(request.files[param.name])
+            else:
+                raise Exception("Unexpected input type")
         if not arguments:
             return "Error!"
         exploit.run_payload(*arguments)

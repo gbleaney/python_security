@@ -1,4 +1,4 @@
-#! python2
+#! /usr/bin/python2
 import subprocess
 
 print("What is your id?")

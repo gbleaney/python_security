@@ -8,12 +8,12 @@
 {{vulnerable_code}}
 </code></pre>
 <h2>Test Exploit</h2>
-<form method="post">
+<form method="post" enctype=multipart/form-data>
     <div class="form-group">
         {% for param in exploit_params %}
-        <label for="title">{{param}}</label>
-        <input type="text" name="{{param}}" class="form-control"
-            value="{{ request.form[param] }}"></input>
+        <label for="title">{{param.name}}</label>
+        <input type="{{param.input_type}}" name="{{param.name}}" class="form-control"
+            value="{{ request.form[param.name] }}"></input>
         </a>
         {% endfor %}
     </div>
