@@ -13,6 +13,4 @@ class JinjaTemplateExploit(ServerSideTemplateInjectionExploit):
     def run_payload(payload: str) -> None:
         import jinja2
         template = jinja2.Template(payload)
-        res = template.render()
-        print(res)
-        return res
+        return template.render()
