@@ -2,7 +2,10 @@
 # FLASK_APP=webapp.app.py FLASK_ENV=development flask run -h localhost -p 2121
 
 import inspect
+import io
+import tempfile
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Type, Tuple, List
 
 from code_execution.execution_base import (
@@ -11,10 +14,14 @@ from code_execution.execution_base import (
     get_exploits,
     get_exploits_by_category,
 )
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, url_for, send_from_directory
+from werkzeug.datastructures import FileStorage
 from werkzeug.datastructures import FileStorage
 
 app = Flask(__name__)
+
+PAYLOAD_FOLDER = Path(".").resolve() / "payload_files"
+PAYLOAD_FOLDER.mkdir(exist_ok=True)
 
 
 @dataclass
@@ -72,9 +79,35 @@ def generate_payload(class_name: str):
     exploit = get_exploit(class_name)
     exploit_params = get_exploit_params(exploit)
 
-    payload = exploit.generate_payload(command)
+    payloads = exploit.generate_payload(command)
+    payloads = payloads if isinstance(payloads, (list, tuple)) else [payloads]
 
-    return payload
+    result = []
+
+    for payload in payloads:
+        if isinstance(payload, FileStorage):
+            payload_folder = PAYLOAD_FOLDER / class_name
+            payload_folder.mkdir(exist_ok=True)
+            payload.save(payload_folder / payload.filename)
+            result.append(
+                url_for(
+                    "payload_file", class_name=class_name, file_name=payload.filename
+                )
+            )
+
+        elif isinstance(payload, str):
+            result.append(payload)
+        else:
+            raise Exception(f"Unexpected type present in payload: {payload}")
+
+    return tuple(result)
+
+
+@app.route("/demo/<class_name>/payload_file/<file_name>", methods=["GET"])
+def payload_file(class_name: str, file_name: str):
+    return send_from_directory(
+        PAYLOAD_FOLDER / class_name, file_name, as_attachment=True
+    )
 
 
 def get_exploit_params(exploit: Exploit) -> List[FormEntry]:
