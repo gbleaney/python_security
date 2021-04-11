@@ -1,10 +1,11 @@
 {% extends 'base.html' %}
 
+<script>hljs.highlightAll();</script>
 
 {% block content %}
 <h1>{% block title %} {{demo_title}} {% endblock %}</h1>
 <h2>Vulnerable Code</h2>
-<pre><code>
+<pre><code class="python">
 {{vulnerable_code}}
 </code></pre>
 <h2>Test Exploit</h2>
@@ -34,7 +35,7 @@
         </div>
         <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
             <div class="card-body">
-                <pre><code>
+                <pre><code class="python">
 {{generation_code}}
             </code></pre>
             </div>
