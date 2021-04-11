@@ -9,13 +9,12 @@
 {{vulnerable_code}}
 </code></pre>
 <h2>Test Exploit</h2>
-<form method="post" enctype=multipart/form-data>
+<form method="post" enctype="multipart/form-data" action="{{url_for('run_payload', class_name=class_name)}}">
     <div class="form-group">
         {% for param in exploit_params %}
         <label for="title">{{param.name}}</label>
         <input type="{{param.input_type}}" name="{{param.name}}" class="form-control"
             value="{{ request.form[param.name] }}"></input>
-        </a>
         {% endfor %}
     </div>
     <div class="form-group">
@@ -39,6 +38,15 @@
 {{generation_code}}
             </code></pre>
             </div>
+            <form method="post" enctype=multipart/form-data action="{{url_for('generate_payload', class_name=class_name)}}">
+                <div class="form-group">
+                    <label>Code to Run</label>
+                    <input type="text" name="command" class="form-control"></input>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

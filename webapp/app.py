@@ -3,8 +3,7 @@
 
 import inspect
 from dataclasses import dataclass
-from werkzeug.datastructures import FileStorage
-
+from typing import Type, Tuple, List
 
 from code_execution.execution_base import (
     Exploit,
@@ -13,6 +12,7 @@ from code_execution.execution_base import (
     get_exploits_by_category,
 )
 from flask import Flask, request, render_template
+from werkzeug.datastructures import FileStorage
 
 app = Flask(__name__)
 
@@ -30,9 +30,54 @@ def homepage():
     )
 
 
-@app.route("/demo/<class_name>", methods=["POST", "GET"])
-def demo(class_name):
+@app.route("/demo/<class_name>", methods=["GET"])
+def demo(class_name: str):
     exploit = get_exploit(class_name)
+    exploit_params = get_exploit_params(exploit)
+
+    return render_template(
+        "demo.html",
+        demo_title=exploit.get_vulnerable_function_fqn(),
+        class_name=class_name,
+        exploit_params=exploit_params,
+        vulnerable_code=inspect.getsource(exploit.run_payload),
+        generation_code=inspect.getsource(exploit.generate_payload),
+        exploits_by_category=get_exploits_by_category(),
+    )
+
+
+@app.route("/demo/<class_name>/run_payload/", methods=["POST"])
+def run_payload(class_name: str):
+    exploit = get_exploit(class_name)
+    exploit_params = get_exploit_params(exploit)
+
+    arguments = []
+    for param in exploit_params:
+        if param.input_type == "text":
+            arguments.append(request.form[param.name])
+        elif param.input_type == "file":
+            arguments.append(request.files[param.name])
+        else:
+            raise Exception("Unexpected input type")
+    if not arguments:
+        return "Error!"
+    exploit.run_payload(*arguments)
+    return "It didn't crash..."
+
+
+@app.route("/demo/<class_name>/generate_payload/", methods=["POST"])
+def generate_payload(class_name: str):
+    command = request.form["command"]
+
+    exploit = get_exploit(class_name)
+    exploit_params = get_exploit_params(exploit)
+
+    payload = exploit.generate_payload(command)
+
+    return payload
+
+
+def get_exploit_params(exploit: Exploit) -> List[FormEntry]:
     exploit_params = []
     for param_name, param in inspect.signature(exploit.run_payload).parameters.items():
         if param.annotation == str:
@@ -43,27 +88,4 @@ def demo(class_name):
             raise Exception("Unexpected parameter annotation")
         exploit_params.append(FormEntry(param_name, input_type))
 
-    print(exploit_params)
-    if request.method == "GET":
-        return render_template(
-            "demo.html",
-            demo_title=exploit.get_vulnerable_function_fqn(),
-            exploit_params=exploit_params,
-            vulnerable_code=inspect.getsource(exploit.run_payload),
-            generation_code=inspect.getsource(exploit.generate_payload),
-            exploits_by_category=get_exploits_by_category(),
-        )
-        # (TODO) print page to take input
-    elif request.method == "POST":
-        arguments = []
-        for param in exploit_params:
-            if param.input_type == "text":
-                arguments.append(request.form[param.name])
-            elif param.input_type == "file":
-                arguments.append(request.files[param.name])
-            else:
-                raise Exception("Unexpected input type")
-        if not arguments:
-            return "Error!"
-        exploit.run_payload(*arguments)
-        return "It didn't crash..."
+    return exploit_params
