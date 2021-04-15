@@ -42,8 +42,7 @@ class InputExploit(SimplePythonExploit):
 
 
     def generate_payload(source_code: str) -> str:
-        source_code = source_code.replace("'", "\\'")
-        return f"__import__('code').InteractiveInterpreter().runsource('{source_code}')"
+        return f"__import__('code').InteractiveInterpreter().runsource('''{source_code}''')"
 
 
     def run_payload(payload: str) -> None:
