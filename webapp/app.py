@@ -7,6 +7,7 @@ import tempfile
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Type, Tuple, List
+import json
 
 from code_execution.execution_base import (
     Exploit,
@@ -28,6 +29,7 @@ PAYLOAD_FOLDER.mkdir(exist_ok=True)
 class FormEntry:
     name: str
     input_type: str
+    python_type: Type
 
 
 @app.route("/")
@@ -60,12 +62,12 @@ def run_payload(class_name: str):
 
     arguments = []
     for param in exploit_params:
-        if param.input_type == "text":
+        if param.python_type == str:
             arguments.append(request.form[param.name])
-        elif param.input_type == "file":
+        elif param.python_type == FileStorage:
             arguments.append(request.files[param.name])
         else:
-            raise Exception("Unexpected input type")
+            raise Exception(f"Unexpected python type: {param.python_type}")
     if not arguments:
         return "Error!"
     exploit.run_payload(*arguments)
@@ -94,13 +96,12 @@ def generate_payload(class_name: str):
                     "payload_file", class_name=class_name, file_name=payload.filename
                 )
             )
-
         elif isinstance(payload, str):
             result.append(payload)
         else:
             raise Exception(f"Unexpected type present in payload: {payload}")
 
-    return tuple(result)
+    return json.dumps(result)
 
 
 @app.route("/demo/<class_name>/payload_file/<file_name>", methods=["GET"])
@@ -119,6 +120,6 @@ def get_exploit_params(exploit: Exploit) -> List[FormEntry]:
             input_type = "file"
         else:
             raise Exception("Unexpected parameter annotation")
-        exploit_params.append(FormEntry(param_name, input_type))
+        exploit_params.append(FormEntry(param_name, input_type, param.annotation))
 
     return exploit_params
