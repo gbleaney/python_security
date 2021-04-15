@@ -68,10 +68,9 @@ def run_payload(class_name: str):
             arguments.append(request.files[param.name])
         else:
             raise Exception(f"Unexpected python type: {param.python_type}")
-    if not arguments:
-        return "Error!"
+
     exploit.run_payload(*arguments)
-    return "It didn't crash..."
+    return "Check the server logs ;)"
 
 
 @app.route("/demo/<class_name>/generate_payload/", methods=["POST"])
