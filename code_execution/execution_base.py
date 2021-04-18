@@ -3,7 +3,7 @@ import logging
 from abc import ABC, abstractclassmethod
 from collections import defaultdict
 from typing import Callable, Set, Type, Dict, List, Union
-
+from json import JSONEncoder
 
 class Exploit(ABC):
     @abstractclassmethod
@@ -14,7 +14,7 @@ class Exploit(ABC):
     def run_payload(payload: str) -> None:
         pass
 
-    vulnerable_function: Union[Callable, str]
+    vulnerable_function: Union[Callable, str] = None
     source: str = ""
     category_name: str = ""
     notes: str = ""
@@ -32,6 +32,18 @@ class Exploit(ABC):
         )
 
 
+class ExploitEncoder(JSONEncoder):
+    def default(self, exploit: Exploit):
+        if not issubclass(exploit, Exploit):
+            super().default(exploit)
+
+        return {
+            "vulnerable_function": exploit.get_vulnerable_function_fqn(),
+            "source": exploit.source,
+            "category_name": exploit.category_name,
+            "notes": exploit.notes,
+        }
+
 def get_exploits_by_category() -> Dict[str, Type[Exploit]]:
     exploits_by_category = defaultdict(list)
     for exploit in get_exploits():
@@ -44,7 +56,7 @@ def get_exploit(class_name: str) -> Type[Exploit]:
     return next(exploit for exploit in get_exploits() if exploit.__name__ == class_name)
 
 
-def get_exploits(starting_class: Type[Exploit] = Exploit) -> Set[Type[Exploit]]:
+def get_exploits(starting_class: Type[Exploit] = Exploit, exclude_abstract=True) -> Set[Type[Exploit]]:
     subclasses = set()
     parents_to_process = [starting_class]
     while parents_to_process:
@@ -54,6 +66,7 @@ def get_exploits(starting_class: Type[Exploit] = Exploit) -> Set[Type[Exploit]]:
                 subclasses.add(child)
                 parents_to_process.append(child)
 
-    subclasses = set(filter(lambda cls: not inspect.isabstract(cls), subclasses))
+    if exclude_abstract:
+        subclasses = set(filter(lambda cls: not inspect.isabstract(cls), subclasses))
 
     return subclasses

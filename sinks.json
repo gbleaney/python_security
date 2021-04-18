@@ -1,0 +1,122 @@
+[
+  {
+    "vulnerable_function": "subprocess.call",
+    "source": "",
+    "category_name": "Shell Command Execution",
+    "notes": ""
+  },
+  {
+    "vulnerable_function": "yaml.load",
+    "source": "https://www.kevinlondon.com/2015/08/15/dangerous-python-functions-pt2.html",
+    "category_name": "Simple Python Code Execution",
+    "notes": "'load' without an explicit loader has been deperecated since 2020, and now requires 'UnsafeLoader' for the exploit to work: https://github.com/yaml/pyyaml/wiki/PyYAML-yaml.load(input)-Deprecation"
+  },
+  {
+    "vulnerable_function": "object.__call__",
+    "source": "",
+    "category_name": "Simple Python Code Execution",
+    "notes": ""
+  },
+  {
+    "vulnerable_function": "chevron.render",
+    "source": "https://github.com/github/codeql/blob/5c2bf68a05a895cd86d3cf32b70e045ce64782dc/python/ql/src/experimental/semmle/python/templates/Chevron.qll",
+    "category_name": "Server-Side Template Injection Exploit",
+    "notes": "This category hasn't been fully explored"
+  },
+  {
+    "vulnerable_function": "builtins.exec",
+    "source": "",
+    "category_name": "Simple Python Code Execution",
+    "notes": ""
+  },
+  {
+    "vulnerable_function": "genshi.template.TextTemplate",
+    "source": "https://github.com/github/codeql/blob/5c2bf68a05a895cd86d3cf32b70e045ce64782dc/python/ql/src/experimental/semmle/python/templates/Genshi.qll",
+    "category_name": "Server-Side Template Injection Exploit",
+    "notes": "This category hasn't been fully explored"
+  },
+  {
+    "vulnerable_function": "sys.path.insert",
+    "source": "",
+    "category_name": "Filesystem Python Code Execution",
+    "notes": ""
+  },
+  {
+    "vulnerable_function": "Cheetah.Template.Template",
+    "source": "https://github.com/github/codeql/blob/5c2bf68a05a895cd86d3cf32b70e045ce64782dc/python/ql/src/experimental/semmle/python/templates/Cheetah.qll",
+    "category_name": "Server-Side Template Injection Exploit",
+    "notes": "This category hasn't been fully explored"
+  },
+  {
+    "vulnerable_function": "builtins.__import__",
+    "source": "",
+    "category_name": "Filesystem Python Code Execution",
+    "notes": ""
+  },
+  {
+    "vulnerable_function": "mako.template.Template.__init__",
+    "source": "https://portswigger.net/research/server-side-template-injection",
+    "category_name": "Server-Side Template Injection Exploit",
+    "notes": "This category hasn't been fully explored"
+  },
+  {
+    "vulnerable_function": "jinja2.environment.Template.render",
+    "source": "",
+    "category_name": "Server-Side Template Injection Exploit",
+    "notes": ""
+  },
+  {
+    "vulnerable_function": "str.format",
+    "source": "",
+    "category_name": "Simple Python Code Execution",
+    "notes": ""
+  },
+  {
+    "vulnerable_function": "_pickle.loads",
+    "source": "https://www.kevinlondon.com/2015/08/15/dangerous-python-functions-pt2.html",
+    "category_name": "Simple Python Code Execution",
+    "notes": ""
+  },
+  {
+    "vulnerable_function": "builtins.input",
+    "source": "",
+    "category_name": "Simple Python Code Execution",
+    "notes": "'input' is only vulnerable in Python 2"
+  },
+  {
+    "vulnerable_function": "airspeed.Template",
+    "source": "https://github.com/github/codeql/blob/5c2bf68a05a895cd86d3cf32b70e045ce64782dc/python/ql/src/experimental/semmle/python/templates/Airspeed.qll",
+    "category_name": "Server-Side Template Injection Exploit",
+    "notes": "This category hasn't been fully explored"
+  },
+  {
+    "vulnerable_function": "builtins.eval",
+    "source": "",
+    "category_name": "Simple Python Code Execution",
+    "notes": ""
+  },
+  {
+    "vulnerable_function": "trender.TRender",
+    "source": "https://github.com/github/codeql/blob/5c2bf68a05a895cd86d3cf32b70e045ce64782dc/python/ql/src/experimental/semmle/python/templates/TRender.qll",
+    "category_name": "Server-Side Template Injection Exploit",
+    "notes": "This category hasn't been fully explored"
+  },
+  {
+    "vulnerable_function": "importlib.import_module",
+    "source": "",
+    "category_name": "Filesystem Python Code Execution",
+    "notes": ""
+  },
+  {
+    "vulnerable_function": "chameleon.PageTemplate.__init__",
+    "source": "https://github.com/github/codeql/blob/5c2bf68a05a895cd86d3cf32b70e045ce64782dc/python/ql/src/experimental/semmle/python/templates/Chameleon.qll",
+    "category_name": "Server-Side Template Injection Exploit",
+    "notes": "This category hasn't been fully explored"
+  },
+  {
+    "vulnerable_function": "tornado.template.Template.__init__",
+    "source": "https://ajinabraham.com/blog/server-side-template-injection-in-tornado",
+    "category_name": "Server-Side Template Injection Exploit",
+    "notes": "This category hasn't been fully explored"
+  }
+]
