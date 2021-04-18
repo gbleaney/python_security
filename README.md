@@ -34,3 +34,6 @@ When adding a new exploit, you can validate it by running the tests:
 ```
 (venv) $ python3 -m unittest
 ```
+## Contributing
+
+PRs are welcome. If you're looking for ideas, look at the "Future Work" section in `code_execution/README.md`. Before submitting an exploit, make sure to run the tests and include evidence of testing in the PR.
