@@ -2,7 +2,7 @@
 
 This directory houses sinks for code execution in Python. This includes the execution of both Python code and shell commands (both on the local macheine, and remotely via protocols like SSH).
 
-# Outstanding Work
+# Future Work
 
 Below is a list of libraries with known code execution sinks, for which we still need to write exploit demos.
 
