@@ -7,6 +7,10 @@ import importlib
 import tempfile
 import yaml
 import textwrap
+import code
+from test import support
+import _testcapi
+import _xxsubinterpreters
 
 from .execution_base import Exploit
 
@@ -19,6 +23,51 @@ class SimplePythonExploit(PythonExploit):
 
     def generate_payload(source_code: str) -> str:
         return source_code
+
+
+class InterpreterRunSourceExploit(SimplePythonExploit):
+    vulnerable_function = code.InteractiveInterpreter.runsource
+
+    def run_payload(payload: str) -> None:
+        inperpreter = code.InteractiveInterpreter()
+        inperpreter.runsource(payload)
+
+
+class InterpreterRunCodeExploit(SimplePythonExploit):
+    vulnerable_function = code.InteractiveInterpreter.runcode
+
+    def run_payload(payload: str) -> None:
+        inperpreter = code.InteractiveInterpreter()
+        inperpreter.runcode(code.compile_command(payload))
+
+
+class ConsolePushExploit(SimplePythonExploit):
+    vulnerable_function = code.InteractiveConsole.push
+
+    def run_payload(payload: str) -> None:
+        console = code.InteractiveConsole()
+        console.push(payload)
+
+
+class TestSubinterpreterExploit(SimplePythonExploit):
+    vulnerable_function = support.run_in_subinterp
+
+    def run_payload(payload: str) -> None:
+        support.run_in_subinterp(payload)
+
+
+class TestCAPISubinterpreterExploit(SimplePythonExploit):
+    vulnerable_function = _testcapi.run_in_subinterp
+
+    def run_payload(payload: str) -> None:
+        _testcapi.run_in_subinterp(payload)
+
+
+class XXSubinterpreterExploit(SimplePythonExploit):
+    vulnerable_function = _xxsubinterpreters.run_string
+
+    def run_payload(payload: str) -> None:
+        _xxsubinterpreters.run_string(_xxsubinterpreters.create(), payload)
 
 
 class EvalExploit(SimplePythonExploit):

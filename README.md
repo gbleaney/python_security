@@ -9,9 +9,9 @@ To work with the code in this repo, you must be in a virtual environment:
 
 ```
 $ cd /path/to/python_security
-$ python3 -m venv venv
+$ python3.8 -m venv venv
 $ source venv/bin/activate
-(venv) $ pip3 install -r requirements.txt
+(venv) $ pip3.8 install -r requirements.txt
 ```
 
 ### Interactive Server
