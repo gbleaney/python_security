@@ -1,5 +1,7 @@
 # Run with `python -m unittest` from root of this repo
 
+import asyncio
+import inspect
 import logging
 import pathlib
 import tempfile
@@ -20,7 +22,7 @@ class CodeExecutionMethods(unittest.TestCase):
         exploit_type: Type[Exploit],
         command: str,
     ):
-        exploits = get_exploits(exploit_type)
+        exploits = sorted(get_exploits(exploit_type),key=lambda exploit: exploit.__name__)
         for exploit in exploits:
             logging.debug(
                 f"Using {exploit} to test {exploit.get_vulnerable_function_fqn()}"
@@ -30,18 +32,27 @@ class CodeExecutionMethods(unittest.TestCase):
                 payload = exploit.generate_payload(
                     command.format(file=file_to_touch.absolute())
                 )
-                logging.debug(payload)
+                logging.debug(f"Using payload: {payload}")
                 if isinstance(payload, (str, bytes, FileStorage)):
-                    exploit.run_payload(payload)
+                    payload = [payload]
                 elif isinstance(payload, (list, tuple)):
-                    exploit.run_payload(*payload)
+                    pass
                 else:
                     raise Exception("Unexpected payload")
-                # import time
-                # time.sleep(1)
+
+
+                if inspect.iscoroutinefunction(exploit.run_payload):
+                    logging.debug("Running async test")
+                    loop = asyncio.new_event_loop()
+                    asyncio.set_event_loop(loop)
+                    loop.run_until_complete(exploit.run_payload(*payload))
+                    loop.close()
+                else:
+                    logging.debug("Running sync test")
+                    exploit.run_payload(*payload)
+
                 logging.debug(f"Test status: {file_to_touch.exists()}")
-                # if not file_to_touch.exists():
-                #     time.sleep(60)
+
                 self.assertTrue(
                     file_to_touch.exists(),
                     f"Expected {exploit} to touch {file_to_touch} when passed {payload}",
