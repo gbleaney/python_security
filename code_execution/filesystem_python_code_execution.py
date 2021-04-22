@@ -23,21 +23,9 @@ class UserControlledFileNameImportExploit(FilesystemPythonExploit):
 
     def run_payload(file_upload: FileStorage) -> None:
         file_name = file_upload.filename
-
-        # Prevent path traversal
-        if ".." in file_upload.filename or "/" in file_upload.filename:
-            raise Exception(
-                "Path traversal attempt. '..' and '/' not allowed in file name"
-            )
-
         file_path = Path(__file__).parent / file_upload.filename
-
-        if file_path.exists():
-            raise Exception(f"{file_path} already exists. Can't overwrite it.")
-
         try:
             file_upload.save(file_path)
-
             from . import helper
 
             # Do stuff

