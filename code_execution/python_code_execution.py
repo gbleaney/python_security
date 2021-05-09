@@ -163,10 +163,7 @@ class YamlLoadsExploit(SimplePythonExploit):
 
 
 class JSONPickleLoadsExploit(SimplePythonExploit):
-    vulnerable_function = pickle.loads
-    source = (
-        "https://www.kevinlondon.com/2015/08/15/dangerous-python-functions-pt2.html"
-    )
+    vulnerable_function = jsonpickle.decode
 
     def generate_payload(source_code: str) -> str:
         class Exploit(object):
