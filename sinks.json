@@ -1,39 +1,15 @@
 [
   {
-    "vulnerable_function": "subprocess.call",
+    "vulnerable_function": "builtins.__import__",
     "source": "",
-    "category_name": "Shell Command Execution",
+    "category_name": "Filesystem Python Code Execution",
     "notes": ""
   },
   {
-    "vulnerable_function": "yaml.load",
-    "source": "https://www.kevinlondon.com/2015/08/15/dangerous-python-functions-pt2.html",
-    "category_name": "Simple Python Code Execution",
-    "notes": "'load' without an explicit loader has been deperecated since 2020, and now requires 'UnsafeLoader' for the exploit to work: https://github.com/yaml/pyyaml/wiki/PyYAML-yaml.load(input)-Deprecation"
-  },
-  {
-    "vulnerable_function": "object.__call__",
+    "vulnerable_function": "importlib.import_module",
     "source": "",
-    "category_name": "Simple Python Code Execution",
+    "category_name": "Filesystem Python Code Execution",
     "notes": ""
-  },
-  {
-    "vulnerable_function": "chevron.render",
-    "source": "https://github.com/github/codeql/blob/5c2bf68a05a895cd86d3cf32b70e045ce64782dc/python/ql/src/experimental/semmle/python/templates/Chevron.qll",
-    "category_name": "Server-Side Template Injection Exploit",
-    "notes": "This category hasn't been fully explored"
-  },
-  {
-    "vulnerable_function": "builtins.exec",
-    "source": "",
-    "category_name": "Simple Python Code Execution",
-    "notes": ""
-  },
-  {
-    "vulnerable_function": "genshi.template.TextTemplate",
-    "source": "https://github.com/github/codeql/blob/5c2bf68a05a895cd86d3cf32b70e045ce64782dc/python/ql/src/experimental/semmle/python/templates/Genshi.qll",
-    "category_name": "Server-Side Template Injection Exploit",
-    "notes": "This category hasn't been fully explored"
   },
   {
     "vulnerable_function": "sys.path.insert",
@@ -48,14 +24,26 @@
     "notes": "This category hasn't been fully explored"
   },
   {
-    "vulnerable_function": "builtins.__import__",
-    "source": "",
-    "category_name": "Filesystem Python Code Execution",
-    "notes": ""
+    "vulnerable_function": "airspeed.Template",
+    "source": "https://github.com/github/codeql/blob/5c2bf68a05a895cd86d3cf32b70e045ce64782dc/python/ql/src/experimental/semmle/python/templates/Airspeed.qll",
+    "category_name": "Server-Side Template Injection Exploit",
+    "notes": "This category hasn't been fully explored"
   },
   {
-    "vulnerable_function": "mako.template.Template.__init__",
-    "source": "https://portswigger.net/research/server-side-template-injection",
+    "vulnerable_function": "chameleon.PageTemplate.__init__",
+    "source": "https://github.com/github/codeql/blob/5c2bf68a05a895cd86d3cf32b70e045ce64782dc/python/ql/src/experimental/semmle/python/templates/Chameleon.qll",
+    "category_name": "Server-Side Template Injection Exploit",
+    "notes": "This category hasn't been fully explored"
+  },
+  {
+    "vulnerable_function": "chevron.render",
+    "source": "https://github.com/github/codeql/blob/5c2bf68a05a895cd86d3cf32b70e045ce64782dc/python/ql/src/experimental/semmle/python/templates/Chevron.qll",
+    "category_name": "Server-Side Template Injection Exploit",
+    "notes": "This category hasn't been fully explored"
+  },
+  {
+    "vulnerable_function": "genshi.template.TextTemplate",
+    "source": "https://github.com/github/codeql/blob/5c2bf68a05a895cd86d3cf32b70e045ce64782dc/python/ql/src/experimental/semmle/python/templates/Genshi.qll",
     "category_name": "Server-Side Template Injection Exploit",
     "notes": "This category hasn't been fully explored"
   },
@@ -66,14 +54,236 @@
     "notes": ""
   },
   {
-    "vulnerable_function": "str.format",
+    "vulnerable_function": "mako.template.Template.__init__",
+    "source": "https://portswigger.net/research/server-side-template-injection",
+    "category_name": "Server-Side Template Injection Exploit",
+    "notes": "This category hasn't been fully explored"
+  },
+  {
+    "vulnerable_function": "tornado.template.Template.__init__",
+    "source": "https://ajinabraham.com/blog/server-side-template-injection-in-tornado",
+    "category_name": "Server-Side Template Injection Exploit",
+    "notes": "This category hasn't been fully explored"
+  },
+  {
+    "vulnerable_function": "trender.TRender",
+    "source": "https://github.com/github/codeql/blob/5c2bf68a05a895cd86d3cf32b70e045ce64782dc/python/ql/src/experimental/semmle/python/templates/TRender.qll",
+    "category_name": "Server-Side Template Injection Exploit",
+    "notes": "This category hasn't been fully explored"
+  },
+  {
+    "vulnerable_function": "asyncio.events.AbstractEventLoop.subprocess_exec",
     "source": "",
-    "category_name": "Simple Python Code Execution",
+    "category_name": "Shell Command Execution",
+    "notes": ""
+  },
+  {
+    "vulnerable_function": "asyncio.events.AbstractEventLoop.subprocess_shell",
+    "source": "",
+    "category_name": "Shell Command Execution",
+    "notes": ""
+  },
+  {
+    "vulnerable_function": "asyncio.subprocess.create_subprocess_exec",
+    "source": "",
+    "category_name": "Shell Command Execution",
+    "notes": ""
+  },
+  {
+    "vulnerable_function": "asyncio.subprocess.create_subprocess_shell",
+    "source": "",
+    "category_name": "Shell Command Execution",
+    "notes": ""
+  },
+  {
+    "vulnerable_function": "os.execl",
+    "source": "",
+    "category_name": "Shell Command Execution",
+    "notes": ""
+  },
+  {
+    "vulnerable_function": "os.execle",
+    "source": "",
+    "category_name": "Shell Command Execution",
+    "notes": ""
+  },
+  {
+    "vulnerable_function": "os.execlp",
+    "source": "",
+    "category_name": "Shell Command Execution",
+    "notes": ""
+  },
+  {
+    "vulnerable_function": "os.execlpe",
+    "source": "",
+    "category_name": "Shell Command Execution",
+    "notes": ""
+  },
+  {
+    "vulnerable_function": "os.execvp",
+    "source": "",
+    "category_name": "Shell Command Execution",
+    "notes": ""
+  },
+  {
+    "vulnerable_function": "os.execvpe",
+    "source": "",
+    "category_name": "Shell Command Execution",
+    "notes": ""
+  },
+  {
+    "vulnerable_function": "os.popen",
+    "source": "",
+    "category_name": "Shell Command Execution",
+    "notes": ""
+  },
+  {
+    "vulnerable_function": "os.spawnl",
+    "source": "",
+    "category_name": "Shell Command Execution",
+    "notes": ""
+  },
+  {
+    "vulnerable_function": "os.spawnle",
+    "source": "",
+    "category_name": "Shell Command Execution",
+    "notes": ""
+  },
+  {
+    "vulnerable_function": "os.spawnlp",
+    "source": "",
+    "category_name": "Shell Command Execution",
+    "notes": ""
+  },
+  {
+    "vulnerable_function": "os.spawnlpe",
+    "source": "",
+    "category_name": "Shell Command Execution",
+    "notes": ""
+  },
+  {
+    "vulnerable_function": "os.spawnv",
+    "source": "",
+    "category_name": "Shell Command Execution",
+    "notes": ""
+  },
+  {
+    "vulnerable_function": "os.spawnve",
+    "source": "",
+    "category_name": "Shell Command Execution",
+    "notes": ""
+  },
+  {
+    "vulnerable_function": "os.spawnvp",
+    "source": "",
+    "category_name": "Shell Command Execution",
+    "notes": ""
+  },
+  {
+    "vulnerable_function": "os.spawnvpe",
+    "source": "",
+    "category_name": "Shell Command Execution",
+    "notes": ""
+  },
+  {
+    "vulnerable_function": "posix.execv",
+    "source": "",
+    "category_name": "Shell Command Execution",
+    "notes": ""
+  },
+  {
+    "vulnerable_function": "posix.execve",
+    "source": "",
+    "category_name": "Shell Command Execution",
+    "notes": ""
+  },
+  {
+    "vulnerable_function": "posix.posix_spawn",
+    "source": "",
+    "category_name": "Shell Command Execution",
+    "notes": ""
+  },
+  {
+    "vulnerable_function": "posix.posix_spawnp",
+    "source": "",
+    "category_name": "Shell Command Execution",
+    "notes": ""
+  },
+  {
+    "vulnerable_function": "posix.system",
+    "source": "",
+    "category_name": "Shell Command Execution",
+    "notes": ""
+  },
+  {
+    "vulnerable_function": "subprocess.Popen",
+    "source": "",
+    "category_name": "Shell Command Execution",
+    "notes": ""
+  },
+  {
+    "vulnerable_function": "subprocess.call",
+    "source": "",
+    "category_name": "Shell Command Execution",
+    "notes": ""
+  },
+  {
+    "vulnerable_function": "subprocess.check_call",
+    "source": "",
+    "category_name": "Shell Command Execution",
+    "notes": ""
+  },
+  {
+    "vulnerable_function": "subprocess.check_output",
+    "source": "",
+    "category_name": "Shell Command Execution",
+    "notes": ""
+  },
+  {
+    "vulnerable_function": "subprocess.getoutput",
+    "source": "",
+    "category_name": "Shell Command Execution",
+    "notes": ""
+  },
+  {
+    "vulnerable_function": "subprocess.getstatusoutput",
+    "source": "",
+    "category_name": "Shell Command Execution",
+    "notes": ""
+  },
+  {
+    "vulnerable_function": "subprocess.run",
+    "source": "",
+    "category_name": "Shell Command Execution",
     "notes": ""
   },
   {
     "vulnerable_function": "_pickle.loads",
     "source": "https://www.kevinlondon.com/2015/08/15/dangerous-python-functions-pt2.html",
+    "category_name": "Simple Python Code Execution",
+    "notes": ""
+  },
+  {
+    "vulnerable_function": "_testcapi.run_in_subinterp",
+    "source": "",
+    "category_name": "Simple Python Code Execution",
+    "notes": ""
+  },
+  {
+    "vulnerable_function": "_xxsubinterpreters.run_string",
+    "source": "",
+    "category_name": "Simple Python Code Execution",
+    "notes": ""
+  },
+  {
+    "vulnerable_function": "builtins.eval",
+    "source": "",
+    "category_name": "Simple Python Code Execution",
+    "notes": ""
+  },
+  {
+    "vulnerable_function": "builtins.exec",
+    "source": "",
     "category_name": "Simple Python Code Execution",
     "notes": ""
   },
@@ -84,39 +294,57 @@
     "notes": "'input' is only vulnerable in Python 2"
   },
   {
-    "vulnerable_function": "airspeed.Template",
-    "source": "https://github.com/github/codeql/blob/5c2bf68a05a895cd86d3cf32b70e045ce64782dc/python/ql/src/experimental/semmle/python/templates/Airspeed.qll",
-    "category_name": "Server-Side Template Injection Exploit",
-    "notes": "This category hasn't been fully explored"
-  },
-  {
-    "vulnerable_function": "builtins.eval",
+    "vulnerable_function": "code.InteractiveConsole.push",
     "source": "",
     "category_name": "Simple Python Code Execution",
     "notes": ""
   },
   {
-    "vulnerable_function": "trender.TRender",
-    "source": "https://github.com/github/codeql/blob/5c2bf68a05a895cd86d3cf32b70e045ce64782dc/python/ql/src/experimental/semmle/python/templates/TRender.qll",
-    "category_name": "Server-Side Template Injection Exploit",
-    "notes": "This category hasn't been fully explored"
-  },
-  {
-    "vulnerable_function": "importlib.import_module",
+    "vulnerable_function": "code.InteractiveInterpreter.runcode",
     "source": "",
-    "category_name": "Filesystem Python Code Execution",
+    "category_name": "Simple Python Code Execution",
     "notes": ""
   },
   {
-    "vulnerable_function": "chameleon.PageTemplate.__init__",
-    "source": "https://github.com/github/codeql/blob/5c2bf68a05a895cd86d3cf32b70e045ce64782dc/python/ql/src/experimental/semmle/python/templates/Chameleon.qll",
-    "category_name": "Server-Side Template Injection Exploit",
-    "notes": "This category hasn't been fully explored"
+    "vulnerable_function": "code.InteractiveInterpreter.runsource",
+    "source": "",
+    "category_name": "Simple Python Code Execution",
+    "notes": ""
   },
   {
-    "vulnerable_function": "tornado.template.Template.__init__",
-    "source": "https://ajinabraham.com/blog/server-side-template-injection-in-tornado",
-    "category_name": "Server-Side Template Injection Exploit",
-    "notes": "This category hasn't been fully explored"
+    "vulnerable_function": "jsonpickle.unpickler.decode",
+    "source": "",
+    "category_name": "Simple Python Code Execution",
+    "notes": ""
+  },
+  {
+    "vulnerable_function": "object.__call__",
+    "source": "",
+    "category_name": "Simple Python Code Execution",
+    "notes": ""
+  },
+  {
+    "vulnerable_function": "str.format",
+    "source": "",
+    "category_name": "Simple Python Code Execution",
+    "notes": ""
+  },
+  {
+    "vulnerable_function": "test.support.run_in_subinterp",
+    "source": "",
+    "category_name": "Simple Python Code Execution",
+    "notes": ""
+  },
+  {
+    "vulnerable_function": "typing.get_type_hints",
+    "source": "",
+    "category_name": "Simple Python Code Execution",
+    "notes": ""
+  },
+  {
+    "vulnerable_function": "yaml.load",
+    "source": "https://www.kevinlondon.com/2015/08/15/dangerous-python-functions-pt2.html",
+    "category_name": "Simple Python Code Execution",
+    "notes": "'load' without an explicit loader has been deperecated since 2020, and now requires 'UnsafeLoader' for the exploit to work: https://github.com/yaml/pyyaml/wiki/PyYAML-yaml.load(input)-Deprecation"
   }
 ]
