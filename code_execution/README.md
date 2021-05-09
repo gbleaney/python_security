@@ -1,6 +1,6 @@
 # Overview
 
-This directory houses sinks for code execution in Python. This includes the execution of both Python code and shell commands (both on the local macheine, and remotely via protocols like SSH).
+This directory houses sinks for code execution in Python. This includes the execution of both Python code and shell commands (both on the local machine, and remotely via protocols like SSH).
 
 # Future Work
 
