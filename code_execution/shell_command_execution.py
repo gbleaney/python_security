@@ -2,7 +2,7 @@ import os
 import shlex
 import subprocess
 import asyncio
-from .execution_base import Exploit
+from .execution_base import Exploit, AsyncEventLoop
 from typing import List
 
 
@@ -64,13 +64,13 @@ class WaitingProtocol(asyncio.SubprocessProtocol):
 class AsyncioSubprocessExecExploit(ShellExploit):
     vulnerable_function = asyncio.events.AbstractEventLoop.subprocess_exec
 
-    async def run_payload(shell_command: str) -> None:
+    def run_payload(shell_command: str) -> None:
         args = shlex.split(shell_command)
-        loop = asyncio.get_event_loop()
-        exit_future = asyncio.Future(loop=loop)
-        transport, _ = await loop.subprocess_exec(lambda: WaitingProtocol(exit_future), *args)
-        await exit_future
-        transport.close()
+        with AsyncEventLoop() as loop:
+            exit_future = asyncio.Future(loop=loop)
+            transport, _ = loop.run_until_complete(loop.subprocess_exec(lambda: WaitingProtocol(exit_future), *args))
+            loop.run_until_complete(exit_future)
+            transport.close()
 
 
 class SubprocessGetStatusOutputExploit(ShellExploit):
@@ -90,9 +90,10 @@ class SubprocessGetOutputExploit(ShellExploit):
 class AsyncioCreateSubprocessShellExploit(ShellExploit):
     vulnerable_function = asyncio.subprocess.create_subprocess_shell
 
-    async def run_payload(shell_command: str) -> None:
-        proc = await asyncio.subprocess.create_subprocess_shell(shell_command)
-        await proc.communicate()
+    def run_payload(shell_command: str) -> None:
+        with AsyncEventLoop() as loop:
+            proc = loop.run_until_complete(asyncio.subprocess.create_subprocess_shell(shell_command))
+            loop.run_until_complete(proc.wait())
 
 
 class OSPopenExploit(ShellExploit):
@@ -113,12 +114,12 @@ class OSSystemExploit(ShellExploit):
 class AsyncioSubprocessShellExploit(ShellExploit):
     vulnerable_function = asyncio.events.AbstractEventLoop.subprocess_shell
 
-    async def run_payload(shell_command: str) -> None:
-        loop = asyncio.get_event_loop()
-        exit_future = asyncio.Future(loop=loop)
-        transport, _ = await loop.subprocess_shell(lambda: WaitingProtocol(exit_future), shell_command)
-        await exit_future
-        transport.close()
+    def run_payload(shell_command: str) -> None:
+        with AsyncEventLoop() as loop:
+            exit_future = asyncio.Future(loop=loop)
+            transport, _ = loop.run_until_complete(loop.subprocess_shell(lambda: WaitingProtocol(exit_future), shell_command))
+            loop.run_until_complete(exit_future)
+            transport.close()
 
 
 class OSExeclpExploit(ShellExploit):
@@ -220,10 +221,13 @@ class OSSpawnvpeExploit(ShellExploit):
 class AsyncioCreateSubprocessExecExploit(ShellExploit):
     vulnerable_function = asyncio.subprocess.create_subprocess_exec
 
-    async def run_payload(shell_command: str) -> None:
+    def run_payload(shell_command: str) -> None:
         args = shlex.split(shell_command)
         program = args[0]
-        await asyncio.subprocess.create_subprocess_exec(program, *args)
+        with AsyncEventLoop() as loop:
+            proc = loop.run_until_complete(asyncio.subprocess.create_subprocess_exec(program, *args))
+            loop.run_until_complete(proc.communicate())
+
 
 
 

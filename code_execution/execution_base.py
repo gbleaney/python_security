@@ -1,5 +1,7 @@
+import asyncio
 import inspect
 import logging
+
 from abc import ABC, abstractclassmethod
 from collections import defaultdict
 from typing import Callable, Set, Type, Dict, List, Union
@@ -31,6 +33,15 @@ class Exploit(ABC):
             )
         )
 
+
+class AsyncEventLoop:
+    def __enter__(self):
+        self.loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(self.loop)
+        return self.loop
+
+    def __exit__(self, *args):
+        self.loop.close()
 
 class ExploitEncoder(JSONEncoder):
     def default(self, exploit: Exploit):

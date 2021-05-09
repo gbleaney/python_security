@@ -40,16 +40,8 @@ class CodeExecutionMethods(unittest.TestCase):
                 else:
                     raise Exception("Unexpected payload")
 
-
-                if inspect.iscoroutinefunction(exploit.run_payload):
-                    logging.debug("Running async test")
-                    loop = asyncio.new_event_loop()
-                    asyncio.set_event_loop(loop)
-                    loop.run_until_complete(exploit.run_payload(*payload))
-                    loop.close()
-                else:
-                    logging.debug("Running sync test")
-                    exploit.run_payload(*payload)
+                logging.debug("Running sync test")
+                exploit.run_payload(*payload)
 
                 logging.debug(f"Test status: {file_to_touch.exists()}")
 
