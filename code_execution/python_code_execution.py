@@ -3,8 +3,9 @@ import base64
 import jsonpickle
 import pickle
 import subprocess
+import typing
 from pathlib import Path
-from typing import Callable, List
+from typing import Callable, List, get_type_hints
 import importlib
 import tempfile
 import yaml
@@ -229,3 +230,15 @@ class DatabaseRecord:
 
 
 record = DatabaseRecord()
+
+
+class TypeHintExploit(SimplePythonExploit):
+    vulnerable_function = typing.get_type_hints
+
+    def run_payload(payload: str) -> None:
+        class C:
+            member: int = 0
+
+        C.__annotations__["member"] = payload
+
+        get_type_hints(C)
