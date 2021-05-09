@@ -83,20 +83,21 @@ def generate_payload(class_name: str):
     payloads = exploit.generate_payload(command)
     payloads = payloads if isinstance(payloads, (list, tuple)) else [payloads]
 
-    result = []
+    result = {}
 
-    for payload in payloads:
+    for param, payload in zip(exploit_params, payloads):
         if isinstance(payload, FileStorage):
             payload_folder = PAYLOAD_FOLDER / class_name
             payload_folder.mkdir(exist_ok=True)
             payload.save(payload_folder / payload.filename)
-            result.append(
-                url_for(
-                    "payload_file", class_name=class_name, file_name=payload.filename
-                )
+            result[param.name] = "Download at: " + url_for(
+                "payload_file",
+                _external=True,
+                class_name=class_name,
+                file_name=payload.filename
             )
         elif isinstance(payload, str):
-            result.append(payload)
+            result[param.name] = payload
         else:
             raise Exception(f"Unexpected type present in payload: {payload}")
 
