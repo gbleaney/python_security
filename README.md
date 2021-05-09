@@ -19,7 +19,7 @@ $ source venv/bin/activate
 You can launch the server to interactively play with the examples:
 
 ```
-(venv) $ FASK_APP=webapp.app.py FLASK_ENV=development flask run -h localhost -p 2121
+(venv) $ FLASK_APP=webapp.app.py FLASK_ENV=development flask run -h localhost -p 2121
 ```
 
 This will let you generate payloads for arbitrary code, and run those payloads on your own machine.
